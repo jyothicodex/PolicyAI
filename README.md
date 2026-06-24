@@ -74,41 +74,24 @@ ollama pull nomic-embed-text
     - `/repository`: Database access interfaces.
     - `/model` & `/dto`: JPA Entities and Data Transfer Objects.
     - `/config`: Spring Security and CORS configurations.
-### 📂 Directory Architecture Flow
+## 📂 Directory Architecture Flow
 
-```mermaid
-graph TD
-    Root[PolicyAI Root] --> Frontend[📁 frontend / src]
-    Root --> Backend[📁 backend / src/main/java/com/policyai]
-
-    subgraph Frontend Architecture
-        Frontend --> P[📁 pages]
-        Frontend --> C[📁 components]
-        Frontend --> S[📁 services]
-        Frontend --> CX[📁 contexts]
-        
-        P -->|Renders| C
-        P -->|Calls API Actions| S
-        CX -->|Provides Global Auth/Chat State| P
-    end
-
-    subgraph Backend Architecture
-        Backend --> Ctrl[📁 controller]
-        Backend --> Svc[📁 service]
-        Backend --> Repo[📁 repository]
-        Backend --> Model[📁 model & dto]
-        
-        Svc -->|Orchestrates RAG & Ollama API| LocalAI[🤖 Local LLM Engine]
-        Ctrl -->|Routes Request| Svc
-        Svc -->|Fetches/Persists Data| Repo
-        Repo -->|Maps Entities| Model
-        Repo -->|Reads/Writes| H2[(H2 Database)]
-    end
-
-    S -->|Secure HTTP Requests + JWT| Ctrl
-
-    style Frontend Architecture fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
-    style Backend Architecture fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+PolicyAI/
+├── backend/                          # Java 21 / Spring Boot API
+│   ├── src/main/java/com/policyai/
+│   │   ├── config/                   # Security filter chains and CORS
+│   │   ├── controller/               # REST endpoints and routing
+│   │   ├── model/                    # JPA Entities and DTOs
+│   │   ├── repository/               # JPA database interfaces
+│   │   └── service/                  # RAG logic, JWT issuance, Agentic tools
+│   └── pom.xml                       # Maven configuration
+└── frontend/                         # React / Vite SPA
+    ├── src/
+    │   ├── components/               # Reusable presentational components
+    │   ├── contexts/                 # Global state management
+    │   ├── pages/                    # Stateful route views 
+    │   └── services/                 # Axios/Fetch API wrappers
+    └── package.json                  # Node dependencies
 
 ## 🤝 Contributing
 
