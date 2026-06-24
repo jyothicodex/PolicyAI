@@ -74,7 +74,41 @@ ollama pull nomic-embed-text
     - `/repository`: Database access interfaces.
     - `/model` & `/dto`: JPA Entities and Data Transfer Objects.
     - `/config`: Spring Security and CORS configurations.
+### 📂 Directory Architecture Flow
 
+```mermaid
+graph TD
+    Root[PolicyAI Root] --> Frontend[📁 frontend / src]
+    Root --> Backend[📁 backend / src/main/java/com/policyai]
+
+    subgraph Frontend Architecture
+        Frontend --> P[📁 pages]
+        Frontend --> C[📁 components]
+        Frontend --> S[📁 services]
+        Frontend --> CX[📁 contexts]
+        
+        P -->|Renders| C
+        P -->|Calls API Actions| S
+        CX -->|Provides Global Auth/Chat State| P
+    end
+
+    subgraph Backend Architecture
+        Backend --> Ctrl[📁 controller]
+        Backend --> Svc[📁 service]
+        Backend --> Repo[📁 repository]
+        Backend --> Model[📁 model & dto]
+        
+        Svc -->|Orchestrates RAG & Ollama API| LocalAI[🤖 Local LLM Engine]
+        Ctrl -->|Routes Request| Svc
+        Svc -->|Fetches/Persists Data| Repo
+        Repo -->|Maps Entities| Model
+        Repo -->|Reads/Writes| H2[(H2 Database)]
+    end
+
+    S -->|Secure HTTP Requests + JWT| Ctrl
+
+    style Frontend Architecture fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
+    style Backend Architecture fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
 
 ## 🤝 Contributing
 
