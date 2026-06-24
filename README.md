@@ -75,7 +75,7 @@ ollama pull nomic-embed-text
     - `/model` & `/dto`: JPA Entities and Data Transfer Objects.
     - `/config`: Spring Security and CORS configurations.
 ## 📂 Directory Architecture Flow
-
+```text
 PolicyAI/
 ├── backend/                          # Java 21 / Spring Boot API
 │   ├── src/main/java/com/policyai/
