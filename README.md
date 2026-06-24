@@ -2,7 +2,7 @@
 
 PolicyAI is an AI-powered policy document understanding platform. It allows organizations to upload their internal policy documents (like HR handbooks, IT policies, etc.) and allows employees to chat with an AI assistant that understands these documents. The AI can also perform actions on behalf of the user, such as drafting leave requests or submitting IT tickets.
 
-## 🌟 Features
+## 🌟 Core Features
 - **Local AI Engine**: Powered completely locally using Ollama (`llama3.2` for chat and tool calling, `nomic-embed-text` for vector embeddings).
 - **Retrieval-Augmented Generation (RAG)**: Extracts text from uploaded PDFs and generates embeddings to accurately answer questions based on your specific documents.
 - **Agentic AI Tool Calling**: The AI isn't just a chatbot; it can trigger backend functions (tools) like drafting leave requests or checking leave balances based on the conversation context.
