@@ -75,9 +75,10 @@ ollama pull nomic-embed-text
     - `/model` & `/dto`: JPA Entities and Data Transfer Objects.
     - `/config`: Spring Security and CORS configurations.
 
+
 ## 🤝 Contributing
-1. Fork the repository.
-2. Create a new feature branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes (`git commit -m 'Add amazing feature'`).
-4. Push to the branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
+
+1. **Fork & Clone:** Fork the repository and clone it.
+2. **Branch:** Create a feature branch: `git checkout -b feature/your-feature`.
+3. **Commit:** Save your changes: `git commit -m "feat: short description"`.
+4. **Push & PR:** Push to your branch and open a Pull Request.
