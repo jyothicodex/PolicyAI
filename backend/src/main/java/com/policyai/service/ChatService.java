@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ChatService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final OllamaService ollamaService;
+    private final GeminiService geminiService;
     private final DocumentService documentService;
     private final VectorStoreService vectorStoreService;
     private final AgentActionService agentActionService;
@@ -41,12 +41,12 @@ public class ChatService {
                 .build();
         chatMessageRepository.save(userMessage);
 
-        if (!ollamaService.isAvailable()) {
+        if (!geminiService.isAvailable()) {
             return buildFallbackResponse("System");
         }
 
         // 1. Vector Search for relevant context
-        double[] queryEmbedding = ollamaService.getEmbedding(question);
+        double[] queryEmbedding = geminiService.getEmbedding(question);
         List<VectorStoreService.DocumentChunk> relevantChunks = vectorStoreService.searchSimilar(queryEmbedding, 5, documentId);
         
         StringBuilder contextBuilder = new StringBuilder();
@@ -84,7 +84,7 @@ public class ChatService {
         List<Map<String, Object>> tools = buildAgentTools();
 
         // 4. Initial Chat Call
-        Map<String, Object> aiResponseMap = ollamaService.chatWithTools(messages, tools);
+        Map<String, Object> aiResponseMap = geminiService.chatWithTools(messages, tools);
         
         // 5. Handle Tool Calls
         if (hasToolCalls(aiResponseMap) || isHallucinatedToolCall(aiResponseMap)) {
@@ -118,7 +118,7 @@ public class ChatService {
             }
             
             // Second call with tool results
-            aiResponseMap = ollamaService.chatWithTools(messages, null);
+            aiResponseMap = geminiService.chatWithTools(messages, null);
         }
 
         // 6. Parse Final Response
@@ -149,7 +149,7 @@ public class ChatService {
 
         org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter = new org.springframework.web.servlet.mvc.method.annotation.SseEmitter(120000L);
 
-        if (!ollamaService.isAvailable()) {
+        if (!geminiService.isAvailable()) {
             try {
                 emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().data("I'm sorry, I'm unable to process your question right now. The AI service is unavailable."));
                 emitter.send(org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event().name("done").data("[DONE]"));
@@ -162,7 +162,7 @@ public class ChatService {
 
         new Thread(() -> {
             try {
-                double[] queryEmbedding = ollamaService.getEmbedding(question);
+                double[] queryEmbedding = geminiService.getEmbedding(question);
                 List<VectorStoreService.DocumentChunk> relevantChunks = vectorStoreService.searchSimilar(queryEmbedding, 5, documentId);
                 
                 StringBuilder contextBuilder = new StringBuilder();
@@ -192,7 +192,7 @@ public class ChatService {
                 messages.add(Map.of("role", "user", "content", question));
 
                 List<Map<String, Object>> tools = buildAgentTools();
-                Map<String, Object> aiResponseMap = ollamaService.chatWithTools(messages, tools);
+                Map<String, Object> aiResponseMap = geminiService.chatWithTools(messages, tools);
                 
                 ChatResponse.SourceInfo source = ChatResponse.SourceInfo.builder()
                         .document(documentName).section("General").page("N/A").build();
@@ -219,7 +219,7 @@ public class ChatService {
                         messages.add(Map.of("role", "tool", "content", toolResult, "name", functionName, "tool_call_id", toolCall.get("id")));
                     }
 
-                    ollamaService.streamChat(messages, emitter, fullResponse -> {
+                    geminiService.streamChat(messages, emitter, fullResponse -> {
                         ChatMessage assistantMsg = ChatMessage.builder()
                                 .documentId(documentId).role(ChatMessage.MessageRole.ASSISTANT).content(fullResponse)
                                 .sourceInfo(serializeSource(source)).confidence(85).build();

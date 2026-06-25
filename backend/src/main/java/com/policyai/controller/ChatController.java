@@ -3,7 +3,7 @@ package com.policyai.controller;
 import com.policyai.dto.ChatRequest;
 import com.policyai.dto.ChatResponse;
 import com.policyai.service.ChatService;
-import com.policyai.service.OllamaService;
+import com.policyai.service.GeminiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class ChatController {
 
     private final ChatService chatService;
-    private final OllamaService ollamaService;
+    private final GeminiService geminiService;
 
     /**
      * Ask a question about policy documents.
@@ -81,7 +81,7 @@ public class ChatController {
      */
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getAIStatus() {
-        boolean available = ollamaService.isAvailable();
+        boolean available = geminiService.isAvailable();
         return ResponseEntity.ok(Map.of(
                 "ollamaAvailable", available,
                 "status", available ? "ready" : "unavailable",

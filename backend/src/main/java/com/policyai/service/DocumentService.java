@@ -23,7 +23,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final PdfService pdfService;
-    private final OllamaService ollamaService;
+    private final GeminiService geminiService;
     private final VectorStoreService vectorStoreService;
     private final com.policyai.repository.ChatMessageRepository chatMessageRepository;
     private final NotificationService notificationService;
@@ -103,9 +103,9 @@ public class DocumentService {
                 return;
             }
 
-            if (ollamaService.isAvailable()) {
+            if (geminiService.isAvailable()) {
                 // Generate summary
-                String summaryJson = ollamaService.generateSummary(
+                String summaryJson = geminiService.generateSummary(
                         document.getExtractedText(),
                         document.getName()
                 );
@@ -154,7 +154,7 @@ public class DocumentService {
 
             if (chunkBuilder.length() + p.length() > maxChunkSize) {
                 String chunk = chunkBuilder.toString();
-                double[] embedding = ollamaService.getEmbedding(chunk);
+                double[] embedding = geminiService.getEmbedding(chunk);
                 vectorStoreService.addChunk(document.getId(), document.getName(), chunk, embedding);
                 chunkBuilder = new StringBuilder();
             }
@@ -164,7 +164,7 @@ public class DocumentService {
         // Process remaining text
         if (chunkBuilder.length() > 0) {
             String chunk = chunkBuilder.toString();
-            double[] embedding = ollamaService.getEmbedding(chunk);
+            double[] embedding = geminiService.getEmbedding(chunk);
             vectorStoreService.addChunk(document.getId(), document.getName(), chunk, embedding);
         }
         log.info("Finished embedding document {}", document.getName());
