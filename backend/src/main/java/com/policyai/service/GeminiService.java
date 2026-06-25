@@ -118,20 +118,8 @@ public class GeminiService {
             for (Map<String, Object> tool : tools) {
                 Map<String, Object> function = (Map<String, Object>) tool.get("function");
                 Map<String, Object> params = (Map<String, Object>) function.get("parameters");
+                // We assume types are already uppercase (OBJECT, STRING, etc.) in the tool definition
                 
-                // Convert type "object" to "OBJECT", "string" to "STRING" etc.
-                if (params != null && params.containsKey("type")) {
-                    params.put("type", params.get("type").toString().toUpperCase());
-                }
-                if (params != null && params.containsKey("properties")) {
-                    Map<String, Map<String, Object>> props = (Map<String, Map<String, Object>>) params.get("properties");
-                    for (Map<String, Object> prop : props.values()) {
-                        if (prop.containsKey("type")) {
-                            prop.put("type", prop.get("type").toString().toUpperCase());
-                        }
-                    }
-                }
-
                 Map<String, Object> funcDecl = new HashMap<>();
                 funcDecl.put("name", function.get("name"));
                 funcDecl.put("description", function.get("description"));

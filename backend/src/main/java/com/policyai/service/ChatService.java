@@ -271,9 +271,9 @@ public class ChatService {
                     "name", "checkLeaveBalance",
                     "description", "Check the remaining leave/PTO balance for an employee.",
                     "parameters", Map.of(
-                        "type", "object",
+                        "type", "OBJECT",
                         "properties", Map.of(
-                            "employeeId", Map.of("type", "string", "description", "The ID of the employee (e.g. EMP123)")
+                            "employeeId", Map.of("type", "STRING", "description", "The ID of the employee (e.g. EMP123)")
                         ),
                         "required", List.of("employeeId")
                     )
@@ -285,11 +285,11 @@ public class ChatService {
                     "name", "draftLeaveRequest",
                     "description", "Draft a formal leave request for an employee.",
                     "parameters", Map.of(
-                        "type", "object",
+                        "type", "OBJECT",
                         "properties", Map.of(
-                            "employeeId", Map.of("type", "string", "description", "The ID of the employee"),
-                            "reason", Map.of("type", "string", "description", "Reason for leave (e.g. Vacation, Sick)"),
-                            "dates", Map.of("type", "string", "description", "Dates for the leave (e.g. Oct 1 to Oct 5)")
+                            "employeeId", Map.of("type", "STRING", "description", "The ID of the employee"),
+                            "reason", Map.of("type", "STRING", "description", "Reason for leave (e.g. Vacation, Sick)"),
+                            "dates", Map.of("type", "STRING", "description", "Dates for the leave (e.g. Oct 1 to Oct 5)")
                         ),
                         "required", List.of("employeeId", "reason", "dates")
                     )
@@ -301,10 +301,10 @@ public class ChatService {
                     "name", "submitItTicket",
                     "description", "Submit an IT support ticket for hardware, software, or access issues.",
                     "parameters", Map.of(
-                        "type", "object",
+                        "type", "OBJECT",
                         "properties", Map.of(
-                            "employeeId", Map.of("type", "string", "description", "The ID of the employee"),
-                            "issueDescription", Map.of("type", "string", "description", "Detailed description of the IT issue")
+                            "employeeId", Map.of("type", "STRING", "description", "The ID of the employee"),
+                            "issueDescription", Map.of("type", "STRING", "description", "Detailed description of the IT issue")
                         ),
                         "required", List.of("employeeId", "issueDescription")
                     )
