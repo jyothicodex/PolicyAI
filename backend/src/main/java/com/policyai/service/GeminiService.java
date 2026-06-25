@@ -126,7 +126,7 @@ public class GeminiService {
                 funcDecl.put("parameters", params);
                 functionDeclarations.add(funcDecl);
             }
-            requestBody.put("tools", List.of(Map.of("function_declarations", functionDeclarations)));
+            requestBody.put("tools", List.of(Map.of("functionDeclarations", functionDeclarations)));
         }
 
         HttpHeaders headers = new HttpHeaders();

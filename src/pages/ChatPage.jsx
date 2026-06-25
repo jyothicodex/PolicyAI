@@ -231,7 +231,7 @@ export default function ChatPage() {
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 50,
+            zIndex: 5,
           }}
         />
       )}
