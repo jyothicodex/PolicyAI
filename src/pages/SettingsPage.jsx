@@ -147,7 +147,7 @@ export default function SettingsPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
             {[
               { icon: Server, label: 'AI Provider', value: 'Gemini AI (Cloud)', color: '#22d3ee' },
-              { icon: Cpu, label: 'Model', value: 'gemini-1.5-flash', color: '#a78bfa' },
+              { icon: Cpu, label: 'Model', value: 'gemini-2.5-flash', color: '#a78bfa' },
               { icon: ExternalLink, label: 'API Endpoint', value: 'generativelanguage.googleapis.com', color: '#60a5fa' },
               { icon: HardDrive, label: 'Context Window', value: '1,048,576 tokens', color: '#34d399' },
             ].map((item, idx) => (
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                 { label: 'Frontend', value: 'React + Vite' },
                 { label: 'Backend', value: 'Spring Boot 3' },
                 { label: 'Database', value: 'PostgreSQL' },
-                { label: 'AI Engine', value: 'Gemini 1.5 Flash' },
+                { label: 'AI Engine', value: 'Gemini 2.5 Flash' },
               ].map((item, idx) => (
                 <div key={idx} style={{
                   padding: '10px 14px', borderRadius: 'var(--radius-md)',
