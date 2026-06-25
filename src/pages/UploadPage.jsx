@@ -15,9 +15,13 @@ export default function UploadPage() {
   const navigate = useNavigate();
   const [uploadedDocs, setUploadedDocs] = useState([]);
 
-  const handleUpload = async (file, onProgress) => {
-    const doc = await uploadDocument(file, onProgress);
-    setUploadedDocs((prev) => [...prev, doc]);
+  const handleUpload = async (file, onProgress, onError) => {
+    try {
+      const doc = await uploadDocument(file, onProgress);
+      setUploadedDocs((prev) => [...prev, doc]);
+    } catch (error) {
+      onError?.(error.message);
+    }
   };
 
   return (

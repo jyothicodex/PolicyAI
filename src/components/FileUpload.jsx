@@ -32,20 +32,35 @@ export default function FileUpload({ onUpload }) {
 
         setFiles((prev) => [...prev, fileEntry]);
 
-        // Simulate upload
-        onUpload?.(file, (progress) => {
-          setFiles((prev) =>
-            prev.map((f) =>
-              f.file === file
-                ? {
-                    ...f,
-                    progress,
-                    status: progress >= 100 ? 'success' : 'uploading',
-                  }
-                : f
-            )
-          );
-        });
+        onUpload?.(
+          file,
+          (progress) => {
+            setFiles((prev) =>
+              prev.map((f) =>
+                f.file === file
+                  ? {
+                      ...f,
+                      progress,
+                      status: progress >= 100 ? 'success' : 'uploading',
+                    }
+                  : f
+              )
+            );
+          },
+          (errorMsg) => {
+            setFiles((prev) =>
+              prev.map((f) =>
+                f.file === file
+                  ? {
+                      ...f,
+                      status: 'error',
+                      error: errorMsg,
+                    }
+                  : f
+              )
+            );
+          }
+        );
       });
     },
     [onUpload]

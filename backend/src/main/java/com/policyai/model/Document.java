@@ -45,10 +45,10 @@ public class Document {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "extracted_text", columnDefinition = "LONGTEXT")
+    @Column(name = "extracted_text", columnDefinition = "TEXT")
     private String extractedText;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     @CreationTimestamp
