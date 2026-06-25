@@ -77,7 +77,7 @@ public class GeminiService {
     private String callGeminiGenerate(String prompt) {
         if (!isAvailable()) return "{}";
         
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + apiKey;
         
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("contents", List.of(
@@ -106,7 +106,7 @@ public class GeminiService {
     public Map<String, Object> chatWithTools(List<Map<String, Object>> messages, List<Map<String, Object>> tools) {
         if (!isAvailable()) return new HashMap<>();
 
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + apiKey;
         
         List<Map<String, Object>> geminiContents = convertMessagesToGeminiFormat(messages);
         Map<String, Object> requestBody = new HashMap<>();
@@ -186,7 +186,7 @@ public class GeminiService {
             return;
         }
 
-        String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:streamGenerateContent?alt=sse&key=" + apiKey;
+        String url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:streamGenerateContent?alt=sse&key=" + apiKey;
         
         List<Map<String, Object>> geminiContents = convertMessagesToGeminiFormat(messages);
         Map<String, Object> requestBody = new HashMap<>();
