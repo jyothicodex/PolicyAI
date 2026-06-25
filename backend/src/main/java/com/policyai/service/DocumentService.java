@@ -296,7 +296,7 @@ public class DocumentService {
      * On startup, automatically fix any documents stuck in PROCESSING state
      * (e.g., from a previous deployment that failed mid-processing).
      */
-    @org.springframework.boot.context.event.EventListener(org.springframework.boot.context.event.ApplicationStartedEvent.class)
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationStartedEvent.class)
     public void fixStuckDocumentsOnStartup() {
         try {
             List<Document> stuckDocs = documentRepository.findAll().stream()
