@@ -1,101 +1,182 @@
 # PolicyAI
 
-PolicyAI is an AI-powered policy document understanding platform. It allows organizations to upload their internal policy documents (like HR handbooks, IT policies, etc.) and allows employees to chat with an AI assistant that understands these documents. The AI can also perform actions on behalf of the user, such as drafting leave requests or submitting IT tickets.
+> An AI-powered policy document assistant. Upload your company's PDF policies and instantly chat with them — powered by Google Gemini 2.5 Flash.
 
-## 🌟 Core Features
-- **Local AI Engine**: Powered completely locally using Ollama (`llama3.2` for chat and tool calling, `nomic-embed-text` for vector embeddings).
-- **Retrieval-Augmented Generation (RAG)**: Extracts text from uploaded PDFs and generates embeddings to accurately answer questions based on your specific documents.
-- **Agentic AI Tool Calling**: The AI isn't just a chatbot; it can trigger backend functions (tools) like drafting leave requests or checking leave balances based on the conversation context.
-- **Secure Authentication**: Built with Spring Security, utilizing stateless JWT (JSON Web Tokens) for sessions and TOTP (Time-Based One-Time Password) for 2FA via Google Authenticator.
-- **Modern UI**: A responsive, glassmorphism-inspired UI built with React, Vite, and plain CSS with theming variables.
+**Live Demo:** [policyai-wine.vercel.app](https://policyai-wine.vercel.app) &nbsp;|&nbsp; **Backend API:** [policyai-6y07.onrender.com](https://policyai-6y07.onrender.com)
 
-## 🏗️ Architecture
-- **Frontend**: React.js, Vite, React Router DOM, Lucide Icons.
-- **Backend**: Java 21, Spring Boot 3, Spring Security, Spring Data JPA.
-- **Database**: H2 (File-based database, stored locally in `backend/data/`).
-- **AI / LLM**: Ollama API running locally.
+---
 
-## 🚀 Getting Started
+## ✨ Features
+
+- **AI Chat over Documents** — Ask natural language questions about any uploaded policy PDF and get precise, sourced answers using RAG (Retrieval-Augmented Generation).
+- **Streaming Responses** — Answers stream token-by-token for a fast, ChatGPT-like experience.
+- **Agentic Tool Calling** — The AI can go beyond answering questions and trigger backend actions (e.g., drafting leave requests, checking balances).
+- **PDF Upload & Summarization** — Upload policy documents and get an automatic AI-generated summary with key points and sections.
+- **Secure Authentication** — Stateless JWT sessions + TOTP-based Two-Factor Authentication (2FA) via Google Authenticator.
+- **Dark / Light Mode** — Fully-themed UI with instant switching.
+- **Email Notifications** — Password reset and account-related emails via SMTP.
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 18 + Vite, React Router DOM, Lucide Icons |
+| **Backend** | Java 21, Spring Boot 3, Spring Security, Spring Data JPA |
+| **Database** | H2 (local dev) / PostgreSQL (production) |
+| **AI Engine** | Google Gemini 2.5 Flash (chat + streaming) |
+| **Embeddings** | Google `gemini-embedding-2` model |
+| **Deployment** | Frontend → Vercel · Backend → Render |
+
+---
+
+## 🚀 Local Development
 
 ### Prerequisites
-1. **Node.js** (v18+)
-2. **Java 21** (JDK 21)
-3. **Maven**
-4. **Ollama**: Download from [ollama.com](https://ollama.com/)
 
-### 1. Setup Ollama (AI Models)
-Start Ollama and pull the required models:
+- **Node.js** v18+
+- **Java 21** (JDK)
+- **Maven** (or use the bundled `run.bat` wrapper on Windows)
+- **A Gemini API key** — Get one free at [aistudio.google.com](https://aistudio.google.com/app/apikey)
+
+---
+
+### 1. Clone the repository
+
 ```bash
-ollama pull llama3.2
-ollama pull nomic-embed-text
+git clone https://github.com/your-username/policydoc.git
+cd policydoc
 ```
-*(Ensure Ollama is running in the background on port `11434`)*
+
+---
 
 ### 2. Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Build the project using Maven:
-   ```bash
-   ./mvnw clean install
-   # Or use the provided script on Windows: run.bat build
-   ```
-3. Start the Spring Boot server:
-   ```bash
-   ./mvnw spring-boot:run
-   # Or use the provided script on Windows: run.bat
-   ```
-   The backend will run on `http://localhost:8080`.
+
+```bash
+cd backend
+```
+
+Set your Gemini API key as an environment variable:
+
+```powershell
+# PowerShell
+$env:GEMINI_API_KEY="your_api_key_here"
+```
+```bash
+# bash / zsh
+export GEMINI_API_KEY="your_api_key_here"
+```
+
+Start the Spring Boot server (Windows):
+```bash
+run.bat
+```
+
+Or with Maven directly:
+```bash
+mvn spring-boot:run
+```
+
+The backend starts at **`http://localhost:8080`**.
+
+> **Default admin credentials** (created on first run if no users exist):
+> - Email: `venisha@policyai.com`
+> - Password: `PolicyAI@2026`
+> 
+> Change these in `application.properties` before deploying.
+
+---
 
 ### 3. Frontend Setup
-1. Navigate to the root directory (where `package.json` is located).
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-   The frontend will run on `http://localhost:5173`.
+
+```bash
+# From the repo root
+npm install
+npm run dev
+```
+
+The frontend starts at **`http://localhost:5173`**.
+
+---
 
 ## 📁 Project Structure
 
-- `/src`: React frontend source code.
-  - `/components`: Reusable UI components (Sidebar, TopBar, etc.).
-  - `/pages`: Main application views (Dashboard, Chat, Login, etc.).
-  - `/contexts`: React Context providers (AuthContext, ChatContext).
-  - `/services`: API service calls to the Spring Boot backend.
-- `/backend`: Spring Boot Java application.
-  - `/src/main/java/com/policyai`: Core Java source code.
-    - `/controller`: REST API endpoints.
-    - `/service`: Business logic (Chat routing, Ollama API, JWT Auth, PDF parsing).
-    - `/repository`: Database access interfaces.
-    - `/model` & `/dto`: JPA Entities and Data Transfer Objects.
-    - `/config`: Spring Security and CORS configurations.
-## 📂 Directory Architecture Flow
-```text
-PolicyAI/
-├── backend/                          # Java 21 / Spring Boot API
+```
+policydoc/
+├── backend/                          # Spring Boot 3 API (Java 21)
 │   ├── src/main/java/com/policyai/
-│   │   ├── config/                   # Security filter chains and CORS
-│   │   ├── controller/               # REST endpoints and routing
-│   │   ├── model/                    # JPA Entities and DTOs
-│   │   ├── repository/               # JPA database interfaces
-│   │   └── service/                  # RAG logic, JWT issuance, Agentic tools
-│   └── pom.xml                       # Maven configuration
-└── frontend/                         # React / Vite SPA
-    ├── src/
-    │   ├── components/               # Reusable presentational components
-    │   ├── contexts/                 # Global state management
-    │   ├── pages/                    # Stateful route views 
-    │   └── services/                 # Axios/Fetch API wrappers
-    └── package.json                  # Node dependencies
+│   │   ├── config/                   # Security, CORS, filter chains
+│   │   ├── controller/               # REST endpoints
+│   │   ├── dto/                      # Request/Response DTOs
+│   │   ├── model/                    # JPA Entities
+│   │   ├── repository/               # Spring Data JPA interfaces
+│   │   └── service/
+│   │       ├── GeminiService.java    # Gemini API integration (chat + embeddings)
+│   │       ├── ChatService.java      # RAG pipeline + streaming
+│   │       ├── DocumentService.java  # PDF processing + async embedding
+│   │       ├── VectorStoreService.java  # In-memory cosine similarity search
+│   │       ├── AgentActionService.java  # Agentic tool implementations
+│   │       ├── JwtService.java       # JWT issuance & validation
+│   │       ├── TotpService.java      # TOTP / 2FA logic
+│   │       └── EmailService.java     # SMTP email delivery
+│   ├── src/main/resources/
+│   │   ├── application.properties       # Local dev config
+│   │   └── application-prod.properties  # Production config (env vars)
+│   ├── Dockerfile                    # Multi-stage build for Render
+│   └── pom.xml
+│
+└── src/                              # React + Vite Frontend
+    ├── components/                   # Reusable UI components
+    ├── contexts/                     # Auth, Chat, Theme context providers
+    ├── pages/                        # Route-level views
+    ├── services/api.js               # Axios API wrappers
+    └── utils/helpers.js              # Shared utilities
+```
+
+---
+
+## ☁️ Production Deployment
+
+### Backend — Render
+
+The backend is containerized via `backend/Dockerfile` and deployed on **Render** as a Web Service.
+
+Set the following environment variables in your Render dashboard:
+
+| Variable | Description |
+|---|---|
+| `GEMINI_API_KEY` | Your Google Gemini API key |
+| `DATABASE_URL` | PostgreSQL connection string (e.g., from Render Postgres) |
+| `DATABASE_USERNAME` | DB username |
+| `DATABASE_PASSWORD` | DB password |
+| `JWT_SECRET` | A long random string for signing JWTs |
+| `SPRING_PROFILES_ACTIVE` | Set to `prod` |
+
+### Frontend — Vercel
+
+The frontend is deployed on **Vercel** (auto-detected as a Vite project).
+
+Set the following environment variable in your Vercel project settings:
+
+| Variable | Description |
+|---|---|
+| `VITE_API_URL` | Your Render backend URL, e.g. `https://your-app.onrender.com/api` |
+
+---
+
+## 🔒 Security Notes
+
+- **Never commit your API keys.** The `GEMINI_API_KEY` is loaded from environment variables — the key is never stored in source code.
+- The root `.gitignore` excludes all `.env*` files.
+- JWT secrets should be at least 64 characters of random hex for production.
+- TOTP 2FA is available for all accounts and is enforced after enabling in the profile page.
+
+---
 
 ## 🤝 Contributing
 
-1. **Fork & Clone:** Fork the repository and clone it.
-2. **Branch:** Create a feature branch: `git checkout -b feature/your-feature`.
-3. **Commit:** Save your changes: `git commit -m "feat: short description"`.
-4. **Push & PR:** Push to your branch and open a Pull Request.
+1. **Fork & Clone** the repository.
+2. **Branch** from `main`: `git checkout -b feature/your-feature`
+3. **Commit** with a clear message: `git commit -m "feat: short description"`
+4. **Push** and open a Pull Request.

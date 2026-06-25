@@ -28,3 +28,7 @@ backend/data/
 
 .vercel
 .env*
+
+# Legacy Ollama files (no longer used — replaced by Gemini AI cloud)
+ollama/
+pull_ollama.bat

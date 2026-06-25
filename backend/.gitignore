@@ -9,11 +9,15 @@ target/
 .project
 .settings/
 
-# Maven
+# Maven wrapper & embedded Maven install
 .mvn/wrapper/maven-wrapper.jar
+.maven/
 
 # Uploads
 uploads/
+
+# Generated emails (temp files from email service)
+emails/
 
 # OS
 .DS_Store
