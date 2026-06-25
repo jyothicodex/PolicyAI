@@ -70,7 +70,7 @@ export default function DocumentsPage() {
             Document Library
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-            {documents.length} policy documents uploaded
+            {loading ? 'Loading...' : `${documents.length} policy documents uploaded`}
           </p>
         </div>
       </div>
