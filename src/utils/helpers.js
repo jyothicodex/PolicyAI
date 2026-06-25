@@ -10,18 +10,30 @@ export function formatFileSize(bytes) {
 }
 
 /**
+ * Helper to ensure a date string is parsed as UTC
+ */
+function parseUTCDate(date) {
+  if (!date) return new Date();
+  if (typeof date === 'string' && !date.endsWith('Z') && date.includes('T')) {
+    return new Date(date + 'Z');
+  }
+  return new Date(date);
+}
+
+/**
  * Format date to relative time string
  */
 export function formatRelativeTime(date) {
   const now = new Date();
-  const diff = now - new Date(date);
+  const dateObj = parseUTCDate(date);
+  const diff = now - dateObj;
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
   if (days > 7) {
-    return new Date(date).toLocaleDateString('en-US', {
+    return dateObj.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -37,7 +49,7 @@ export function formatRelativeTime(date) {
  * Format date to readable string
  */
 export function formatDate(date) {
-  return new Date(date).toLocaleDateString('en-US', {
+  return parseUTCDate(date).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
