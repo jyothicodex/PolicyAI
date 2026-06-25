@@ -226,7 +226,14 @@ public class ChatService {
                         chatMessageRepository.save(assistantMsg);
                     });
                 } else {
-                    String answer = (String) ((Map<String, Object>) aiResponseMap.get("message")).get("content");
+                    Map<String, Object> messageMap = (Map<String, Object>) aiResponseMap.get("message");
+                    String answer;
+                    if (messageMap != null) {
+                        answer = (String) messageMap.get("content");
+                        if (answer == null) answer = "I'm sorry, I could not generate a response.";
+                    } else {
+                        answer = "I'm sorry, the AI service encountered an error and could not generate a response.";
+                    }
                     
                     // Break down into smaller chunks for fake streaming effect since we got it synchronously
                     String[] words = answer.split("(?<=\\s)");
