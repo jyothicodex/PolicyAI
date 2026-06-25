@@ -192,6 +192,10 @@ export async function deleteDocument(id) {
   return true;
 }
 
+export async function reprocessDocument(id) {
+  return apiFetch(`/documents/${id}/reprocess`, { method: 'POST' });
+}
+
 export async function searchDocuments(query) {
   return apiFetch(`/documents/search?q=${encodeURIComponent(query)}`);
 }

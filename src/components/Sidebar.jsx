@@ -199,7 +199,7 @@ export default function Sidebar() {
             </span>
           </div>
           <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
-            Powered by Llama 3 via Ollama for intelligent policy understanding.
+            Powered by Gemini AI for intelligent policy understanding.
           </p>
         </div>
       )}

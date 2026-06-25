@@ -83,11 +83,11 @@ public class ChatController {
     public ResponseEntity<Map<String, Object>> getAIStatus() {
         boolean available = geminiService.isAvailable();
         return ResponseEntity.ok(Map.of(
-                "ollamaAvailable", available,
+                "geminiAvailable", available,
                 "status", available ? "ready" : "unavailable",
                 "message", available
-                        ? "AI service is ready for questions"
-                        : "Ollama is not running. Start it with: ollama serve"
+                        ? "Gemini AI service is ready for questions"
+                        : "Gemini API key is not configured. Please set GEMINI_API_KEY environment variable."
         ));
     }
 }

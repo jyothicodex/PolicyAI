@@ -1,9 +1,12 @@
-import { FileText, Clock, ChevronRight, Loader, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { FileText, Clock, ChevronRight, Loader, Trash2, RefreshCw } from 'lucide-react';
 import { formatFileSize, formatRelativeTime } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
+import { reprocessDocument } from '../services/api';
 
-export default function DocumentCard({ document, index = 0, onDelete }) {
+export default function DocumentCard({ document, index = 0, onDelete, onReprocess }) {
   const navigate = useNavigate();
+  const [retrying, setRetrying] = useState(false);
 
   const categoryColors = {
     Handbook: { bg: 'rgba(59, 130, 246, 0.12)', text: '#60a5fa', border: 'rgba(59, 130, 246, 0.2)' },
@@ -15,22 +18,44 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
   };
 
   const catColor = categoryColors[document.category] || categoryColors.Uploaded;
+  const isProcessing = document.status === 'processing';
+  const isError = document.status === 'error';
+  const isReady = document.status === 'ready';
+
+  const handleRetry = async (e) => {
+    e.stopPropagation();
+    setRetrying(true);
+    try {
+      await reprocessDocument(document.id);
+      onReprocess?.();
+    } catch (err) {
+      console.error('Reprocess failed', err);
+    } finally {
+      setRetrying(false);
+    }
+  };
+
+  const statusBadge = isReady
+    ? { bg: 'rgba(16, 185, 129, 0.12)', color: '#34d399', label: 'Ready' }
+    : isError
+    ? { bg: 'rgba(239, 68, 68, 0.12)', color: '#f87171', label: 'Error' }
+    : { bg: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24', label: 'Processing' };
 
   return (
     <div
       className="glass-card"
-      onClick={() => document.status === 'ready' && navigate(`/documents/${document.id}`)}
+      onClick={() => isReady && navigate(`/documents/${document.id}`)}
       style={{
         padding: '22px',
-        cursor: document.status === 'ready' ? 'pointer' : 'default',
+        cursor: isReady ? 'pointer' : 'default',
         opacity: 0,
         animation: `fadeInUp 0.4s ease-out ${index * 0.08}s forwards`,
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Processing overlay */}
-      {document.status === 'processing' && (
+      {/* Processing shimmer bar */}
+      {isProcessing && (
         <div
           style={{
             position: 'absolute',
@@ -59,7 +84,7 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
             flexShrink: 0,
           }}
         >
-          {document.status === 'processing' ? (
+          {isProcessing ? (
             <Loader
               size={20}
               color={catColor.text}
@@ -127,7 +152,6 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
 
             {/* Status badge */}
             <span
-              className={document.status === 'ready' ? 'badge-success' : 'badge-warning'}
               style={{
                 padding: '3px 10px',
                 borderRadius: 'var(--radius-full)',
@@ -136,11 +160,8 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
-                background:
-                  document.status === 'ready'
-                    ? 'rgba(16, 185, 129, 0.12)'
-                    : 'rgba(245, 158, 11, 0.12)',
-                color: document.status === 'ready' ? '#34d399' : '#fbbf24',
+                background: statusBadge.bg,
+                color: statusBadge.color,
               }}
             >
               <span
@@ -151,13 +172,15 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
                   background: 'currentColor',
                 }}
               />
-              {document.status === 'ready' ? 'Ready' : 'Processing'}
+              {statusBadge.label}
             </span>
 
             {/* Meta */}
-            <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
-              {document.pageCount} pages
-            </span>
+            {document.pageCount > 0 && (
+              <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
+                {document.pageCount} pages
+              </span>
+            )}
             <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
               {formatFileSize(document.fileSize)}
             </span>
@@ -176,8 +199,8 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
           </div>
         </div>
 
-        {/* Actions / Arrow */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', flexShrink: 0, marginTop: '4px' }}>
+        {/* Actions */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', flexShrink: 0, marginTop: '4px' }}>
           {onDelete && (
             <button
               onClick={(e) => onDelete(document.id, e)}
@@ -200,7 +223,30 @@ export default function DocumentCard({ document, index = 0, onDelete }) {
               <Trash2 size={16} />
             </button>
           )}
-          {document.status === 'ready' && (
+          {(isError || isProcessing) && (
+            <button
+              onClick={handleRetry}
+              disabled={retrying}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: retrying ? 'not-allowed' : 'pointer',
+                color: '#fbbf24',
+                padding: '6px',
+                borderRadius: '6px',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onMouseOver={(e) => { if (!retrying) e.currentTarget.style.background = 'rgba(245, 158, 11, 0.1)'; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              title="Retry processing"
+            >
+              <RefreshCw size={16} style={{ animation: retrying ? 'spin-slow 1s linear infinite' : 'none' }} />
+            </button>
+          )}
+          {isReady && (
             <ChevronRight
               size={18}
               color="var(--text-tertiary)"

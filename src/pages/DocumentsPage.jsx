@@ -11,13 +11,22 @@ export default function DocumentsPage() {
   const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
   const [sortBy, setSortBy] = useState('date'); // 'date', 'name', 'status'
 
-  useEffect(() => {
-    const fetchDocs = async () => {
+  const fetchDocs = async () => {
+    try {
       const docs = await getDocuments();
       setDocuments(docs);
+    } catch (err) {
+      console.error('Failed to load documents', err);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchDocs();
+    // Poll every 5 seconds so processing status updates automatically
+    const interval = setInterval(fetchDocs, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleDelete = async (id, e) => {
@@ -233,7 +242,7 @@ export default function DocumentsPage() {
           }}
         >
           {filteredDocs.map((doc, idx) => (
-            <DocumentCard key={doc.id} document={doc} index={idx} onDelete={handleDelete} />
+            <DocumentCard key={doc.id} document={doc} index={idx} onDelete={handleDelete} onReprocess={fetchDocs} />
           ))}
         </div>
       )}

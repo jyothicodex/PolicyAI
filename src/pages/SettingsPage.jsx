@@ -140,16 +140,16 @@ export default function SettingsPage() {
             </div>
             <div>
               <h3 style={{ fontSize: '16px', fontWeight: 700 }}>AI Configuration</h3>
-              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>Local AI model settings (read-only)</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>AI model settings (read-only)</p>
             </div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
             {[
-              { icon: Server, label: 'AI Provider', value: 'Ollama (Local)', color: '#22d3ee' },
-              { icon: Cpu, label: 'Model', value: 'llama3.2', color: '#a78bfa' },
-              { icon: ExternalLink, label: 'API Endpoint', value: 'http://localhost:11434', color: '#60a5fa' },
-              { icon: HardDrive, label: 'Context Window', value: '8,192 tokens', color: '#34d399' },
+              { icon: Server, label: 'AI Provider', value: 'Gemini AI (Cloud)', color: '#22d3ee' },
+              { icon: Cpu, label: 'Model', value: 'gemini-1.5-flash', color: '#a78bfa' },
+              { icon: ExternalLink, label: 'API Endpoint', value: 'generativelanguage.googleapis.com', color: '#60a5fa' },
+              { icon: HardDrive, label: 'Context Window', value: '1,048,576 tokens', color: '#34d399' },
             ].map((item, idx) => (
               <div key={idx} style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -235,8 +235,8 @@ export default function SettingsPage() {
               {[
                 { label: 'Frontend', value: 'React + Vite' },
                 { label: 'Backend', value: 'Spring Boot 3' },
-                { label: 'Database', value: 'H2 (Embedded)' },
-                { label: 'AI Engine', value: 'Ollama + Llama 3.2' },
+                { label: 'Database', value: 'PostgreSQL' },
+                { label: 'AI Engine', value: 'Gemini 1.5 Flash' },
               ].map((item, idx) => (
                 <div key={idx} style={{
                   padding: '10px 14px', borderRadius: 'var(--radius-md)',

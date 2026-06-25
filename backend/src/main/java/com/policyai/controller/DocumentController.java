@@ -112,4 +112,17 @@ public class DocumentController {
     public ResponseEntity<List<DocumentResponse>> searchDocuments(@RequestParam("q") String query) {
         return ResponseEntity.ok(documentService.searchDocuments(query));
     }
+
+    /**
+     * Re-trigger async processing for a document stuck in PROCESSING state.
+     * POST /api/documents/{id}/reprocess
+     */
+    @PostMapping("/{id}/reprocess")
+    public ResponseEntity<?> reprocessDocument(@PathVariable Long id) {
+        boolean started = documentService.reprocessDocument(id);
+        if (started) {
+            return ResponseEntity.ok(Map.of("message", "Reprocessing started for document " + id));
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

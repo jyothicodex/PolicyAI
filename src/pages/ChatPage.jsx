@@ -8,12 +8,20 @@ export default function ChatPage() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  useEffect(() => {
-    const fetchDocs = async () => {
+  const fetchDocs = async () => {
+    try {
       const docs = await getDocuments();
-      setDocuments(docs.filter((d) => d.status === 'ready'));
-    };
+      setDocuments(docs); // Show ALL documents, not just "ready"
+    } catch (err) {
+      console.error('Failed to fetch documents', err);
+    }
+  };
+
+  useEffect(() => {
     fetchDocs();
+    // Poll every 5 seconds so newly processed docs show up
+    const interval = setInterval(fetchDocs, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -168,8 +176,16 @@ export default function ChatPage() {
                     <FileText size={14} color="var(--text-secondary)" />
                     <div style={{ flex: 1 }}>
                       <p style={{ fontWeight: 500 }}>{doc.name}</p>
-                      <span style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
-                        {doc.pageCount} pages • {doc.category}
+                      <span style={{ fontSize: '12px', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{
+                          display: 'inline-block',
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          background: doc.status === 'ready' ? 'var(--color-success)' : doc.status === 'error' ? '#ef4444' : '#f59e0b',
+                          flexShrink: 0,
+                        }} />
+                        {doc.status === 'ready' ? `${doc.pageCount} pages • ${doc.category}` : doc.status === 'error' ? 'Processing failed' : 'Processing…'}
                       </span>
                     </div>
                     {selectedDoc?.id === doc.id && (
