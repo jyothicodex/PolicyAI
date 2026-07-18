@@ -6,6 +6,11 @@
 
 ---
 
+## ▶ Demo video
+https://youtu.be/bQ1szOjSw_I?si=5nox7TNEhWis9Bzg
+
+---
+
 ## ✨ Features
 
 - **AI Chat over Documents** — Ask natural language questions about any uploaded policy PDF and get precise, sourced answers using RAG (Retrieval-Augmented Generation).
